@@ -34,7 +34,9 @@ npm run dev
 
 ## Repo GitHub
 
-Nom : **`Wtconnectwebadmin`** — créer sous **u4425190785-byte** d’abord (voir [docs/GITHUB-BYTE.md](./docs/GITHUB-BYTE.md) et [CLOUDFLARE-PAGES.md](./docs/CLOUDFLARE-PAGES.md)).
+**Glitch (primaire pour ce projet) :** https://github.com/cfonte732-glitch/Wtconnectwebadmin  
+
+Cloudflare Pages : [docs/CLOUDFLARE-PAGES.md](./docs/CLOUDFLARE-PAGES.md) — brancher ce repo.
 
 ## Contrat API
 
