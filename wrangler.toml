@@ -1,0 +1,7 @@
+# Cloudflare Pages — Wtconnectwebadmin (Super Admin)
+# Projet Pages SÉPARÉ de wtconnect-web / portail.
+name = "Wtconnectwebadmin"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+pages_build_output_dir = ".vercel/output/static"

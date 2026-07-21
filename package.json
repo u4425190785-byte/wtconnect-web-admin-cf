@@ -1,11 +1,12 @@
 {
-  "name": "wtconnect-admin",
-  "version": "0.0.0",
+  "name": "Wtconnectwebadmin",
+  "version": "0.0.1",
   "private": true,
-  "description": "Console Super Admin WTConnect (squelette — non branché prod)",
+  "description": "Console Super Admin WTConnect — Cloudflare Pages (séparé du portail)",
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "next build",
+    "pages:build": "next-on-pages && node scripts/patch-nop-async-hooks.cjs",
     "start": "next start",
     "lint": "next lint"
   },
@@ -14,10 +15,17 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
+  "overrides": {
+    "vercel": "$vercel"
+  },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "1.13.6",
     "@types/node": "^22.16.5",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
-    "typescript": "^5.8.3"
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0",
+    "typescript": "^5.8.3",
+    "vercel": "39.1.1"
   }
 }

@@ -1,28 +1,31 @@
-# Créer le dépôt GitHub sous u4425190785-byte
+# Créer le dépôt GitHub `Wtconnectwebadmin` (byte d’abord)
 
-`gh` sur cette machine est connecté en **cfonte732-glitch** uniquement.
-Le dépôt Super Admin doit être créé **d’abord** sur le profil **byte** (règle Byte avant Glitch).
+`gh` sur beaucoup de postes est encore connecté en **cfonte732-glitch**.  
+Le dépôt doit être créé **d’abord** sur **u4425190785-byte**.
 
-## Une fois authentifié en byte
+## Création + push
 
 ```powershell
-cd wtconnect-admin
+cd Wtconnectwebadmin
 gh auth login   # compte u4425190785-byte
 
-gh repo create u4425190785-byte/wtconnect-admin --private `
+gh repo create u4425190785-byte/Wtconnectwebadmin --private `
   --source=. --remote=byte --push `
   --description "Console Super Admin WTConnect (Pages dédiées)"
 ```
 
-Puis, après validation, miroir glitch :
+## Dépôt déjà créé (vide) sur byte
 
 ```powershell
-gh repo create cfonte732-glitch/wtconnect-admin --private
-git remote add origin https://github.com/cfonte732-glitch/wtconnect-admin.git
-git push origin main
+git remote add byte https://github.com/u4425190785-byte/Wtconnectwebadmin.git
+git push -u byte main
 ```
 
-## En attendant
+## Miroir glitch (après validation utilisateur)
 
-Le code local `wtconnect-admin/` est prêt (squelette + client API).
-L’API `/admin/*` est dans `wtconnect-api` (additive, inactive sans `SUPER_ADMIN_EMAILS`).
+```powershell
+gh auth login   # cfonte732-glitch si besoin
+gh repo create cfonte732-glitch/Wtconnectwebadmin --private
+git remote add origin https://github.com/cfonte732-glitch/Wtconnectwebadmin.git
+git push origin main
+```
