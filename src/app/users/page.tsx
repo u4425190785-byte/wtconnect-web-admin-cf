@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState, type CSSProperties } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   AdminApiNotReadyError,
   AdminUser,
@@ -12,10 +12,9 @@ import {
 } from '@/lib/api-client';
 
 export default function UsersPage() {
+  const router = useRouter();
   const [users, setUsers] = useState<AdminUser[]>([]);
-  const [notice, setNotice] = useState<string | null>(
-    'Phase 0 : maquette. Les actions appellent /admin/* (404 attendu tant que l’API n’est pas étendue).'
-  );
+  const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,11 +27,15 @@ export default function UsersPage() {
       setNotice(null);
     } catch (err) {
       if (err instanceof AdminApiNotReadyError) {
-        setNotice(err.message);
-        setUsers([]);
-      } else {
-        setError(err instanceof Error ? err.message : 'Erreur chargement');
+        router.replace('/login');
+        return;
       }
+      const msg = err instanceof Error ? err.message : 'Erreur chargement';
+      if (/Authentification|401|Session|Super Admin/i.test(msg)) {
+        router.replace('/login');
+        return;
+      }
+      setError(msg);
     }
   }
 
@@ -88,10 +91,7 @@ export default function UsersPage() {
   return (
     <div style={{ display: 'grid', gap: 24 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-        <h1 style={{ margin: 0, fontSize: 20 }}>Utilisateurs Auth</h1>
-        <Link href="/" style={{ color: '#8b9aab', fontSize: 13 }}>
-          Accueil
-        </Link>
+        <h1 style={{ margin: 0, fontSize: 20 }}>Utilisateurs</h1>
       </div>
 
       {notice && (

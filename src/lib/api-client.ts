@@ -51,6 +51,9 @@ export type AdminUser = {
 export async function listUsers(): Promise<AdminUser[]> {
   const res = await adminFetch('/admin/users?per_page=50');
   assertAdminReady(res);
+  if (res.status === 401 || res.status === 403) {
+    throw new Error('Authentification requise');
+  }
   const body = (await res.json().catch(() => null)) as { items?: AdminUser[]; error?: string } | null;
   if (!res.ok) throw new Error(body?.error || 'Liste users impossible');
   return body?.items || [];

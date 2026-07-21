@@ -20,9 +20,7 @@ export default function AdminLoginPage() {
       router.push('/users');
     } catch (err) {
       if (err instanceof AdminApiNotReadyError) {
-        setError(
-          'API Super Admin pas encore déployée (phase 0). Les écrans UI sont prêts ; brancher /admin/* plus tard sans toucher au portail.'
-        );
+        setError('API Super Admin indisponible');
       } else {
         setError(err instanceof Error ? err.message : 'Erreur');
       }
@@ -36,6 +34,7 @@ export default function AdminLoginPage() {
       onSubmit={(e) => void onSubmit(e)}
       style={{
         maxWidth: 400,
+        margin: '48px auto 0',
         display: 'grid',
         gap: 12,
         padding: 20,
@@ -44,10 +43,7 @@ export default function AdminLoginPage() {
         borderRadius: 8,
       }}
     >
-      <h1 style={{ margin: 0, fontSize: 18 }}>Login Super Admin</h1>
-      <p style={{ margin: 0, fontSize: 13, color: '#8b9aab' }}>
-        Réservé aux opérateurs (allowlist). Pas le login portail utilisateur.
-      </p>
+      <h1 style={{ margin: 0, fontSize: 18 }}>Login</h1>
       {error && (
         <p style={{ margin: 0, padding: 10, background: '#3a1f1f', color: '#f5c2c2', fontSize: 13 }}>
           {error}

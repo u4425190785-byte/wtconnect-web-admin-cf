@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 export const metadata = {
   title: 'WTConnect Super Admin',
-  description: 'Console Super Admin — squelette (non branché prod)',
+  description: 'Console Super Admin WTConnect',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -21,13 +21,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           style={{
             borderBottom: '1px solid #2a3440',
             padding: '12px 24px',
-            display: 'flex',
-            alignItems: 'baseline',
-            gap: 12,
           }}
         >
           <strong style={{ letterSpacing: '0.02em' }}>WTConnect Super Admin</strong>
-          <span style={{ fontSize: 13, color: '#8b9aab' }}>ops</span>
         </header>
         <main style={{ maxWidth: 960, margin: '0 auto', padding: '24px' }}>{children}</main>
       </body>
