@@ -3,28 +3,20 @@
 Guide pour brancher **cette** interface Super Admin sur un **nouveau** projet Cloudflare Pages.  
 ≠ `wtconnect-web` / `portail.wintruckconnect.net`.
 
-## 1. Repo GitHub (byte d’abord)
+## 1. Repo GitHub (Glitch d’abord pour ce projet)
 
 Nom du dépôt : **`Wtconnectwebadmin`**
 
-```powershell
-# Compte gh = u4425190785-byte
-cd Wtconnectwebadmin
-gh auth login
+**Déjà créé :** https://github.com/cfonte732-glitch/Wtconnectwebadmin (`origin` / `main`)
 
-gh repo create u4425190785-byte/Wtconnectwebadmin --private `
-  --source=. --remote=byte --push `
-  --description "Console Super Admin WTConnect (Pages dédiées)"
-```
-
-Si le dépôt existe déjà vide :
+Pour ce repo, l’ordre est **Glitch → Byte** (décision projet). Miroir byte optionnel plus tard :
 
 ```powershell
-git remote add byte https://github.com/u4425190785-byte/Wtconnectwebadmin.git
-git push -u byte main
+# Après création du dépôt vide côté u4425190785-byte :
+git push byte main
 ```
 
-Miroir glitch **uniquement après validation**.
+Cloudflare Pages : connecter **`cfonte732-glitch/Wtconnectwebadmin`**.
 
 ## 2. Nouveau projet Cloudflare Pages
 
