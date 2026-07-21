@@ -18,7 +18,8 @@ Console **Super Admin** WTConnect — front séparé du portail utilisateur.
 ## Stack prévue
 
 - Next.js (Pages Cloudflare) — même famille que `wtconnect-web`
-- Appels **uniquement** vers l’API (`NEXT_PUBLIC_API_URL`) routes `/admin/*` (à venir)
+- Appels **uniquement** vers l’API (`NEXT_PUBLIC_API_URL`) routes `/admin/*`
+- Routes implémentées dans `wtconnect-api` (additives) — **503** tant que `SUPER_ADMIN_EMAILS` est vide
 - **Jamais** de `SUPABASE_SERVICE_ROLE_KEY` dans le navigateur
 
 ## URL cible
@@ -39,7 +40,14 @@ Les écrans actuels sont des **maquettes** (pas branchées à une API admin rée
 
 ## Repo GitHub
 
-Dossier prêt à être extrait / poussé vers un dépôt dédié (ex. `wtconnect-admin`), miroir Byte puis Glitch selon la règle Git WTConnect.
+Voir [docs/GITHUB-BYTE.md](./docs/GITHUB-BYTE.md) — créer sous **u4425190785-byte** d’abord (`gh` doit être authentifié en byte).
+
+Commit local initial prêt sur `main`. Remote à ajouter après création du dépôt :
+
+```bash
+git remote add byte https://github.com/u4425190785-byte/wtconnect-admin.git
+git push -u byte main
+```
 
 ## Contrat API
 
