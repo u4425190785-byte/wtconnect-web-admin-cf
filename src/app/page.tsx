@@ -7,31 +7,25 @@ export default function HomePage() {
       <div>
         <h1 style={{ margin: '0 0 8px', fontSize: 22 }}>Console Super Admin</h1>
         <p style={{ margin: 0, color: '#8b9aab', fontSize: 14, lineHeight: 1.5 }}>
-          Squelette prêt pour un repo GitHub + Cloudflare Pages dédiés. Aucune route{' '}
-          <code>/admin/*</code> n’est encore déployée sur l’API — le portail et l’existant restent
-          inchangés.
+          Console ops séparée du portail. Connecte-toi avec un compte listé dans{' '}
+          <code>SUPER_ADMIN_EMAILS</code>, puis ouvre <strong>Utilisateurs</strong>.
         </p>
       </div>
 
       <nav style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
         <Link href="/login" style={linkBtn}>
-          Login admin
+          1. Login admin
         </Link>
         <Link href="/users" style={linkBtn}>
-          Utilisateurs
+          2. Utilisateurs
         </Link>
       </nav>
 
-      <ul style={{ margin: 0, paddingLeft: 18, color: '#b6c2ce', fontSize: 14, lineHeight: 1.7 }}>
-        <li>Créer un compte Auth (e-mail / MDP)</li>
-        <li>Révoquer un compte</li>
-        <li>« Se connecter en tant que » (impersonation — phase ultérieure)</li>
-      </ul>
-
-      <p style={{ margin: 0, fontSize: 13, color: '#6b7a8a' }}>
-        Spec : <code>docs/ADR-SUPER-ADMIN.md</code> · Contrat :{' '}
-        <code>wtconnect-admin/docs/API-CONTRACT.md</code>
-      </p>
+      <ol style={{ margin: 0, paddingLeft: 18, color: '#b6c2ce', fontSize: 14, lineHeight: 1.7 }}>
+        <li>Login admin (e-mail allowlist, ex. c.fontaine@2sn.fr)</li>
+        <li>Page Utilisateurs → liste, créer un compte, révoquer</li>
+        <li>« Voir en tant que » → ouvre le portail (page /impersonate à finaliser côté portail)</li>
+      </ol>
     </div>
   );
 }

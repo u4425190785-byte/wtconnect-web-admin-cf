@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
         >
           <strong style={{ letterSpacing: '0.02em' }}>WTConnect Super Admin</strong>
-          <span style={{ fontSize: 13, color: '#8b9aab' }}>phase 0 — squelette</span>
+          <span style={{ fontSize: 13, color: '#8b9aab' }}>ops</span>
         </header>
         <main style={{ maxWidth: 960, margin: '0 auto', padding: '24px' }}>{children}</main>
       </body>
