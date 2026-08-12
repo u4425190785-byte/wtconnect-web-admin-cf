@@ -1,25 +1,14 @@
-# GitHub — Wtconnectwebadmin (Glitch d’abord)
+# GitHub — wtconnect-web-admin-cf (Byte)
 
-Pour **ce** repo, ordre : **Glitch → Byte** (contrairement aux autres dépôts WTConnect).
+Repo cible Cloudflare Pages Byte :
 
-## Glitch (fait)
+https://github.com/u4425190785-byte/wtconnect-web-admin-cf
 
-- https://github.com/cfonte732-glitch/Wtconnectwebadmin
-- Remote local : `origin` → branche `main`
-
-```powershell
-git push origin main
-```
-
-## Byte (optionnel, plus tard)
+Source initiale : `cfonte732-glitch/Wtconnectwebadmin`.
 
 ```powershell
-# Créer le dépôt vide sur u4425190785-byte, puis :
-git remote add byte https://github.com/u4425190785-byte/Wtconnectwebadmin.git   # si absent
-git push byte main
+git remote add origin https://github.com/u4425190785-byte/wtconnect-web-admin-cf.git
+git push -u origin main
 ```
 
-## Cloudflare Pages
-
-Connecter le repo **`cfonte732-glitch/Wtconnectwebadmin`**.  
-Réglages : [CLOUDFLARE-PAGES.md](./CLOUDFLARE-PAGES.md).
+Pages : brancher **ce** repo Byte — [CLOUDFLARE-PAGES.md](./CLOUDFLARE-PAGES.md).

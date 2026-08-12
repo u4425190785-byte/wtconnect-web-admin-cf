@@ -4,7 +4,7 @@
 > Inactif en prod tant que `SUPER_ADMIN_EMAILS` est vide (réponses **503**).  
 > Le portail user (`/auth/login`, `/connect/*`) est **inchangé**.
 
-Base URL : même host API que le portail (ex. `https://api.185-124-202-100.sslip.io`).  
+Base URL : même host API que le portail Byte (ex. `https://api.185-124-202-123.sslip.io`).  
 Auth : session cookie super-admin (même mécanisme cookies que `/auth/*`, guard rôle différent).
 
 ## Auth super-admin

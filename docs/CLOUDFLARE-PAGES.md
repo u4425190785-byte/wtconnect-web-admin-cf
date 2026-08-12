@@ -1,22 +1,13 @@
-# Cloudflare Pages — Wtconnectwebadmin
+# Cloudflare Pages — wtconnect-web-admin-cf (Byte)
 
-Guide pour brancher **cette** interface Super Admin sur un **nouveau** projet Cloudflare Pages.  
-≠ `wtconnect-web` / `portail.wintruckconnect.net`.
+Console Super Admin Byte → API **`.123`**.  
+≠ portail user (`wt-connect-web-cf`) ≠ front Render (`wtconnect-web`).
 
-## 1. Repo GitHub (Glitch d’abord pour ce projet)
+## 1. Repo GitHub
 
-Nom du dépôt : **`Wtconnectwebadmin`**
+https://github.com/u4425190785-byte/wtconnect-web-admin-cf (`main`)
 
-**Déjà créé :** https://github.com/cfonte732-glitch/Wtconnectwebadmin (`origin` / `main`)
-
-Pour ce repo, l’ordre est **Glitch → Byte** (décision projet). Miroir byte optionnel plus tard :
-
-```powershell
-# Après création du dépôt vide côté u4425190785-byte :
-git push byte main
-```
-
-Cloudflare Pages : connecter **`cfonte732-glitch/Wtconnectwebadmin`**.
+Source métier : miroir de `cfonte732-glitch/Wtconnectwebadmin`.
 
 ## 2. Nouveau projet Cloudflare Pages
 
@@ -24,68 +15,59 @@ Dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to 
 
 | Champ | Valeur |
 |--------|--------|
-| Repository | `u4425190785-byte/Wtconnectwebadmin` (ou le miroir une fois promu) |
-| Project name | `Wtconnectwebadmin` |
+| Repository | `u4425190785-byte/wtconnect-web-admin-cf` |
+| Project name | `wtconnect-web-admin-cf` (minuscules) |
 | Production branch | `main` |
-| Framework preset | Next.js (ou None) |
+| Framework preset | **None** |
 | **Build command** | `npm run pages:build` |
-| **Build output directory** | *(vide si `wrangler.toml` détecté)* — sinon `.vercel/output/static` |
-| **Root directory** | `/` (racine du repo) |
+| **Build output directory** | `.vercel/output/static` |
+| **Root directory** | *(vide)* |
 | **Deploy command** | *(vide)* |
 
 Ne **pas** publier le dossier `.next`.
 
-## 3. Variables d’environnement (Pages → Settings → Environment variables)
+## 3. Variables d’environnement
 
 Production (et Preview si besoin) :
 
 | Variable | Valeur |
 |----------|--------|
-| `NEXT_PUBLIC_API_URL` | `https://api.185-124-202-100.sslip.io` (sans `/` final) |
-| `NEXT_PUBLIC_PORTAL_URL` | `https://portail.wintruckconnect.net` |
+| `NEXT_PUBLIC_API_URL` | `https://api.185-124-202-123.sslip.io` |
+| `NEXT_PUBLIC_PORTAL_URL` | `https://wt-connect-web-cf.pages.dev` |
 
-Après toute modif `NEXT_PUBLIC_*` → **Redeploy**.
+Sans `/` final. Après toute modif `NEXT_PUBLIC_*` → **Redeploy**.
 
-## 4. Domaine custom (optionnel)
+## 4. Domaine
 
-Pages → **Custom domains** → ex. `admin.wintruckconnect.net`  
-DNS chez le registrar / Cloudflare : CNAME vers `Wtconnectwebadmin.pages.dev`.
+URL typique : `https://wtconnect-web-admin-cf.pages.dev`  
+Custom domain optionnel (CNAME vers `*.pages.dev`).
 
-URL de secours Cloudflare : `https://Wtconnectwebadmin.pages.dev`
-
-## 5. API (serveur) — sans casser le portail
+## 5. API (VPS `.123`)
 
 Dans `~/wtconnect/deploy/.env.api` :
 
 ```env
-# AJOUTER l’origine admin (ne pas retirer portail / pages.dev)
-CORS_ORIGINS=https://wtconnect-web.pages.dev,https://portail.wintruckconnect.net,https://Wtconnectwebadmin.pages.dev,https://admin.wintruckconnect.net,http://localhost:3001
-
-# Activer Super Admin (allowlist)
+CORS_ORIGINS=...,https://wtconnect-web-admin-cf.pages.dev,http://localhost:3001
 SUPER_ADMIN_EMAILS=c.fontaine@2sn.fr
-PORTAL_PUBLIC_URL=https://portail.wintruckconnect.net
+PORTAL_PUBLIC_URL=https://wt-connect-web-cf.pages.dev
 ```
 
-Redémarrer l’API **après** avoir déployé l’image qui contient les routes `/admin/*` :
+Puis :
 
 ```bash
 cd ~/wtconnect/deploy
-docker compose -f docker-compose.api.yml --env-file .env.api up -d --build api
+docker compose -f docker-compose.api.yml --env-file .env.api up -d api
 ```
 
-Smoke (ne doit pas casser l’existant) :
+Smoke :
 
 ```bash
-curl -fsS https://api.185-124-202-100.sslip.io/health
-curl -fsS https://api.185-124-202-100.sslip.io/connect/einvoicing/health
-curl -fsS https://api.185-124-202-100.sslip.io/admin/health
-# → {"ok":true,"module":"super-admin","configured":true|false}
+curl -fsS https://api.185-124-202-123.sslip.io/health
+curl -fsS https://api.185-124-202-123.sslip.io/admin/health
 ```
 
 ## 6. Première connexion
 
-1. Ouvrir `https://Wtconnectwebadmin.pages.dev/login` (ou ton custom domain)
-2. Compte Auth dont l’e-mail est dans `SUPER_ADMIN_EMAILS`
+1. Ouvrir `https://wtconnect-web-admin-cf.pages.dev/login`
+2. Compte dont l’e-mail est dans `SUPER_ADMIN_EMAILS`
 3. Écrans `/users` : créer / révoquer / impersonation
-
-Ce login **n’est pas** celui du portail user (même cookies API possibles, mais allowlist admin obligatoire).
