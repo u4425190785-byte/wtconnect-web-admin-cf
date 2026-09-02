@@ -72,6 +72,38 @@ export async function createUser(email: string, password: string): Promise<Admin
   return body.item;
 }
 
+export async function addUserToSameTenants(
+  sourceUserId: string,
+  email: string,
+  password?: string
+): Promise<{
+  item: AdminUser & { password?: string };
+  created: boolean;
+  memberships: { tenant_id: string; tenant_name: string | null; role: string }[];
+}> {
+  const res = await adminFetch(`/admin/users/${encodeURIComponent(sourceUserId)}/add-user`, {
+    method: 'POST',
+    body: JSON.stringify({
+      email,
+      ...(password ? { password } : {}),
+      role: 'admin',
+    }),
+  });
+  assertAdminReady(res);
+  const body = (await res.json().catch(() => null)) as {
+    item?: AdminUser & { password?: string };
+    created?: boolean;
+    memberships?: { tenant_id: string; tenant_name: string | null; role: string }[];
+    error?: string;
+  } | null;
+  if (!res.ok || !body?.item) throw new Error(body?.error || 'Ajout utilisateur impossible');
+  return {
+    item: body.item,
+    created: !!body.created,
+    memberships: body.memberships || [],
+  };
+}
+
 export async function revokeUser(userId: string): Promise<void> {
   const res = await adminFetch(`/admin/users/${encodeURIComponent(userId)}/revoke`, {
     method: 'POST',

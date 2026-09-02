@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import {
   AdminApiNotReadyError,
   AdminUser,
+  addUserToSameTenants,
   createUser,
   listUsers,
   revokeUser,
@@ -88,6 +89,36 @@ export default function UsersPage() {
     }
   }
 
+  async function onAddUser(u: AdminUser) {
+    const nextEmail = window.prompt(
+      `E-mail du collègue à ajouter dans les mêmes sociétés que ${u.email}`
+    );
+    if (!nextEmail) return;
+    const nextPassword = window.prompt(
+      'Mot de passe temporaire (laisser vide pour en générer un)'
+    );
+    if (nextPassword === null) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const result = await addUserToSameTenants(u.id, nextEmail.trim(), nextPassword.trim() || undefined);
+      const tenants = result.memberships.map((m) => m.tenant_name || m.tenant_id).join(', ');
+      const pwd = result.item.password
+        ? ` Mot de passe généré : ${result.item.password}`
+        : result.created
+          ? ''
+          : ' (compte Auth déjà existant)';
+      setNotice(
+        `${result.created ? 'Créé' : 'Rattaché'} : ${result.item.email} → ${tenants || 'sociétés'}.${pwd}`
+      );
+      await refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Ajout utilisateur impossible');
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <div style={{ display: 'grid', gap: 24 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
@@ -165,6 +196,9 @@ export default function UsersPage() {
                     <button type="button" disabled={busy} onClick={() => void onImpersonate(u.id)} style={btnGhost}>
                       Voir en tant que
                     </button>
+                    <button type="button" disabled={busy} onClick={() => void onAddUser(u)} style={btnAdd}>
+                      Ajouter un utilisateur
+                    </button>
                     <button type="button" disabled={busy} onClick={() => void onRevoke(u.id)} style={btnDanger}>
                       Révoquer
                     </button>
@@ -207,6 +241,11 @@ const btnGhost: CSSProperties = {
   border: '1px solid #3d4f63',
   color: '#e7ecf1',
   fontWeight: 500,
+};
+
+const btnAdd: CSSProperties = {
+  ...btnStyle,
+  background: '#1d4e89',
 };
 
 const btnDanger: CSSProperties = {
