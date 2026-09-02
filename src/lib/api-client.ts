@@ -157,6 +157,42 @@ export async function listTenants(): Promise<AdminTenant[]> {
   return body?.items || [];
 }
 
+export type AdminTenantGroupSociety = {
+  id: string;
+  name: string;
+  legal_name: string | null;
+  code: string | null;
+  siren: string | null;
+  created_at: string | null;
+  user_count: number;
+};
+
+export type AdminTenantGroup = {
+  id: string;
+  owner_user_id: string | null;
+  owner_email: string;
+  name: string;
+  legal_name: string | null;
+  code: string | null;
+  siren: string | null;
+  created_at: string | null;
+  user_count: number;
+  society_count: number;
+  first_created: boolean;
+  societies: AdminTenantGroupSociety[];
+};
+
+export async function listTenantGroups(): Promise<AdminTenantGroup[]> {
+  const res = await adminFetch('/admin/tenant-groups');
+  assertAdminReady(res);
+  if (res.status === 401 || res.status === 403) {
+    throw new Error('Authentification requise');
+  }
+  const body = (await res.json().catch(() => null)) as { items?: AdminTenantGroup[]; error?: string } | null;
+  if (!res.ok) throw new Error(body?.error || 'Liste des comptes société impossible');
+  return body?.items || [];
+}
+
 export async function listTenantMembers(tenantId: string): Promise<{
   tenant: { id: string; name: string };
   items: AdminTenantMember[];
