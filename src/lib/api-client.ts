@@ -126,3 +126,57 @@ export async function startImpersonation(userId: string): Promise<{ exchange_url
   if (!res.ok || !body?.exchange_url) throw new Error(body?.error || 'Impersonation impossible');
   return { exchange_url: body.exchange_url };
 }
+
+export type AdminTenant = {
+  id: string;
+  name: string;
+  legal_name: string | null;
+  code: string | null;
+  siren: string | null;
+  created_at: string | null;
+  user_count: number;
+  first_created: boolean;
+};
+
+export type AdminTenantMember = {
+  user_id: string;
+  email: string;
+  role: string;
+  created_at?: string | null;
+  banned?: boolean;
+};
+
+export async function listTenants(): Promise<AdminTenant[]> {
+  const res = await adminFetch('/admin/tenants');
+  assertAdminReady(res);
+  if (res.status === 401 || res.status === 403) {
+    throw new Error('Authentification requise');
+  }
+  const body = (await res.json().catch(() => null)) as { items?: AdminTenant[]; error?: string } | null;
+  if (!res.ok) throw new Error(body?.error || 'Liste sociétés impossible');
+  return body?.items || [];
+}
+
+export async function listTenantMembers(tenantId: string): Promise<{
+  tenant: { id: string; name: string };
+  items: AdminTenantMember[];
+  user_count: number;
+}> {
+  const res = await adminFetch(`/admin/tenants/${encodeURIComponent(tenantId)}/members`);
+  assertAdminReady(res);
+  if (res.status === 401 || res.status === 403) {
+    throw new Error('Authentification requise');
+  }
+  const body = (await res.json().catch(() => null)) as {
+    tenant?: { id: string; name: string };
+    items?: AdminTenantMember[];
+    user_count?: number;
+    error?: string;
+  } | null;
+  if (!res.ok || !body?.tenant) throw new Error(body?.error || 'Membres société impossibles');
+  return {
+    tenant: body.tenant,
+    items: body.items || [],
+    user_count: typeof body.user_count === 'number' ? body.user_count : (body.items || []).length,
+  };
+}
