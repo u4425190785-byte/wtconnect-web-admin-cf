@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { AdminNav } from '@/components/AdminNav';
 
 export const metadata = {
   title: 'WTConnect Super Admin',
@@ -21,11 +22,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           style={{
             borderBottom: '1px solid #2a3440',
             padding: '12px 24px',
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 8,
           }}
         >
           <strong style={{ letterSpacing: '0.02em' }}>WTConnect Super Admin</strong>
+          <AdminNav />
         </header>
-        <main style={{ maxWidth: 960, margin: '0 auto', padding: '24px' }}>{children}</main>
+        <main style={{ maxWidth: 1080, margin: '0 auto', padding: '24px' }}>{children}</main>
       </body>
     </html>
   );

@@ -72,6 +72,38 @@ export async function createUser(email: string, password: string): Promise<Admin
   return body.item;
 }
 
+export async function addUserToSameTenants(
+  sourceUserId: string,
+  email: string,
+  password?: string
+): Promise<{
+  item: AdminUser & { password?: string };
+  created: boolean;
+  memberships: { tenant_id: string; tenant_name: string | null; role: string }[];
+}> {
+  const res = await adminFetch(`/admin/users/${encodeURIComponent(sourceUserId)}/add-user`, {
+    method: 'POST',
+    body: JSON.stringify({
+      email,
+      ...(password ? { password } : {}),
+      role: 'admin',
+    }),
+  });
+  assertAdminReady(res);
+  const body = (await res.json().catch(() => null)) as {
+    item?: AdminUser & { password?: string };
+    created?: boolean;
+    memberships?: { tenant_id: string; tenant_name: string | null; role: string }[];
+    error?: string;
+  } | null;
+  if (!res.ok || !body?.item) throw new Error(body?.error || 'Ajout utilisateur impossible');
+  return {
+    item: body.item,
+    created: !!body.created,
+    memberships: body.memberships || [],
+  };
+}
+
 export async function revokeUser(userId: string): Promise<void> {
   const res = await adminFetch(`/admin/users/${encodeURIComponent(userId)}/revoke`, {
     method: 'POST',
@@ -93,4 +125,96 @@ export async function startImpersonation(userId: string): Promise<{ exchange_url
   const body = (await res.json().catch(() => null)) as { exchange_url?: string; error?: string } | null;
   if (!res.ok || !body?.exchange_url) throw new Error(body?.error || 'Impersonation impossible');
   return { exchange_url: body.exchange_url };
+}
+
+export type AdminTenant = {
+  id: string;
+  name: string;
+  legal_name: string | null;
+  code: string | null;
+  siren: string | null;
+  created_at: string | null;
+  user_count: number;
+  first_created: boolean;
+};
+
+export type AdminTenantMember = {
+  user_id: string;
+  email: string;
+  role: string;
+  created_at?: string | null;
+  banned?: boolean;
+};
+
+export async function listTenants(): Promise<AdminTenant[]> {
+  const res = await adminFetch('/admin/tenants');
+  assertAdminReady(res);
+  if (res.status === 401 || res.status === 403) {
+    throw new Error('Authentification requise');
+  }
+  const body = (await res.json().catch(() => null)) as { items?: AdminTenant[]; error?: string } | null;
+  if (!res.ok) throw new Error(body?.error || 'Liste sociétés impossible');
+  return body?.items || [];
+}
+
+export type AdminTenantGroupSociety = {
+  id: string;
+  name: string;
+  legal_name: string | null;
+  code: string | null;
+  siren: string | null;
+  created_at: string | null;
+  user_count: number;
+  electronic_address?: string | null;
+  directory_status?: string | null;
+};
+
+export type AdminTenantGroup = {
+  id: string;
+  owner_user_id: string | null;
+  owner_email: string;
+  name: string;
+  legal_name: string | null;
+  code: string | null;
+  siren: string | null;
+  created_at: string | null;
+  user_count: number;
+  society_count: number;
+  first_created: boolean;
+  societies: AdminTenantGroupSociety[];
+};
+
+export async function listTenantGroups(): Promise<AdminTenantGroup[]> {
+  const res = await adminFetch('/admin/tenant-groups');
+  assertAdminReady(res);
+  if (res.status === 401 || res.status === 403) {
+    throw new Error('Authentification requise');
+  }
+  const body = (await res.json().catch(() => null)) as { items?: AdminTenantGroup[]; error?: string } | null;
+  if (!res.ok) throw new Error(body?.error || 'Liste des comptes société impossible');
+  return body?.items || [];
+}
+
+export async function listTenantMembers(tenantId: string): Promise<{
+  tenant: { id: string; name: string };
+  items: AdminTenantMember[];
+  user_count: number;
+}> {
+  const res = await adminFetch(`/admin/tenants/${encodeURIComponent(tenantId)}/members`);
+  assertAdminReady(res);
+  if (res.status === 401 || res.status === 403) {
+    throw new Error('Authentification requise');
+  }
+  const body = (await res.json().catch(() => null)) as {
+    tenant?: { id: string; name: string };
+    items?: AdminTenantMember[];
+    user_count?: number;
+    error?: string;
+  } | null;
+  if (!res.ok || !body?.tenant) throw new Error(body?.error || 'Membres société impossibles');
+  return {
+    tenant: body.tenant,
+    items: body.items || [],
+    user_count: typeof body.user_count === 'number' ? body.user_count : (body.items || []).length,
+  };
 }
