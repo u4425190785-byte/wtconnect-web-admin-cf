@@ -123,12 +123,14 @@ export default function TenantsPage() {
               <th style={th}>Sociétés</th>
               <th style={th}>Utilisateurs</th>
               <th style={th}>Créé le</th>
+              <th style={th}>Adresse électronique</th>
+              <th style={th}>Statut annuaire</th>
             </tr>
           </thead>
           <tbody>
             {groups.length === 0 ? (
               <tr>
-                <td colSpan={5} style={{ padding: 12, color: '#8b9aab' }}>
+                <td colSpan={7} style={{ padding: 12, color: '#8b9aab' }}>
                   Aucun compte société.
                 </td>
               </tr>
@@ -206,10 +208,20 @@ function GroupRows({
         <td style={td}>{group.society_count}</td>
         <td style={td}>{group.user_count}</td>
         <td style={td}>{formatDate(group.created_at)}</td>
+        <td style={{ ...td, fontFamily: 'monospace' }}>
+          {group.society_count === 1
+            ? group.societies[0]?.electronic_address || '—'
+            : `${group.society_count} sociétés`}
+        </td>
+        <td style={td}>
+          {group.society_count === 1
+            ? directoryStatusLabel(group.societies[0]?.directory_status)
+            : '—'}
+        </td>
       </tr>
       {open && (
         <tr>
-          <td colSpan={5} style={{ padding: '0 10px 12px', borderBottom: '1px solid #1e2630', background: '#151c24' }}>
+          <td colSpan={7} style={{ padding: '0 10px 12px', borderBottom: '1px solid #1e2630', background: '#151c24' }}>
             <p style={{ margin: '8px 0', color: '#8b9aab', fontSize: 12 }}>
               {group.society_count} société{group.society_count > 1 ? 's' : ''} · {group.user_count}{' '}
               utilisateur{group.user_count > 1 ? 's' : ''}
@@ -242,8 +254,9 @@ function GroupRows({
                         ) : null}
                       </span>
                       <span style={{ color: '#8b9aab' }}>
-                        {s.siren || '—'} · {s.user_count} utilisateur{s.user_count > 1 ? 's' : ''} ·{' '}
-                        {formatDate(s.created_at)}
+                        {s.siren || '—'} · {s.electronic_address || '—'} ·{' '}
+                        {directoryStatusLabel(s.directory_status)} · {s.user_count} utilisateur
+                        {s.user_count > 1 ? 's' : ''} · {formatDate(s.created_at)}
                       </span>
                     </button>
                     {societyOpen && (
@@ -284,6 +297,16 @@ function GroupRows({
       )}
     </>
   );
+}
+
+function directoryStatusLabel(status: string | null | undefined): string {
+  const s = String(status || '').trim();
+  if (!s) return '—';
+  if (/^active$/i.test(s)) return 'Active';
+  if (/upcoming/i.test(s)) return 'À venir';
+  if (/waiting/i.test(s)) return 'En attente d’activation';
+  if (/non déclaré/i.test(s)) return 'Non déclaré';
+  return s;
 }
 
 function formatDate(value: string | null): string {

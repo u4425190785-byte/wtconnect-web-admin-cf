@@ -165,6 +165,8 @@ export type AdminTenantGroupSociety = {
   siren: string | null;
   created_at: string | null;
   user_count: number;
+  electronic_address?: string | null;
+  directory_status?: string | null;
 };
 
 export type AdminTenantGroup = {
