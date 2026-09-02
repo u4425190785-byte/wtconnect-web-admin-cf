@@ -247,9 +247,7 @@ function GroupRows({
                     >
                       <span>
                         <strong>{title}</strong>
-                        {s.legal_name && s.legal_name !== s.name ? (
-                          <span style={{ color: '#8b9aab', marginLeft: 8 }}>{s.name}</span>
-                        ) : s.code ? (
+                        {s.code && s.code !== title ? (
                           <span style={{ color: '#8b9aab', marginLeft: 8 }}>{s.code}</span>
                         ) : null}
                       </span>
